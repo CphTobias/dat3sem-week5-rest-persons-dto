@@ -10,6 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -20,9 +21,7 @@ public class PersonResource extends Provider {
 
     @GET
     @Path("/{id}")
-    public Response getById(
-        @PathParam("id") int id
-    ) {
+    public Response getById(@PathParam("id") int id) {
         PersonDTO personDTO = REPO.getPersonRepo().getPersonById(id);
         return Response.ok(GSON.toJson(personDTO)).build();
     }
@@ -41,10 +40,7 @@ public class PersonResource extends Provider {
 
     @PUT
     @Path("/{id}")
-    public Response editPerson(
-        @PathParam("id") int id,
-        PersonDTO personDTO
-    ) {
+    public Response editPerson(@PathParam("id") int id, PersonDTO personDTO) {
         personDTO.setId(id);
         PersonDTO updatedPerson = REPO.getPersonRepo().editPerson(personDTO);
         return Response.ok(GSON.toJson(updatedPerson)).build();
@@ -52,9 +48,7 @@ public class PersonResource extends Provider {
 
     @DELETE
     @Path("/{id}")
-    public Response deletePerson(
-        @PathParam("id") int id
-    ) {
+    public Response deletePerson(@PathParam("id") int id) {
         PersonDTO deletedPerson = REPO.getPersonRepo().deletePerson(id);
         return Response.ok(GSON.toJson(deletedPerson)).build();
     }

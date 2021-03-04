@@ -69,14 +69,24 @@ public class PersonFacadeTest {
 
     @Test
     public void testGetPersonById() {
-        PersonDTO actual = repo.getPersonById(person1.getPersonId());
+        PersonDTO actual = null;
+        try {
+            actual = repo.getPersonById(person1.getPersonId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         PersonDTO expected = new PersonDTO(person1);
         assertEquals(expected, actual);
     }
 
     @Test
     public void testGetAllPersons() {
-        PersonsDTO actual = repo.getAllPersons();
+        PersonsDTO actual = null;
+        try {
+            actual = repo.getAllPersons();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         List<Person> people = new ArrayList<>();
         people.add(person1);
         people.add(person2);
@@ -89,7 +99,12 @@ public class PersonFacadeTest {
     @Test
     public void testAddPerson() {
         PersonDTO personDTO = new PersonDTO("Test", "Name", "4321");
-        PersonDTO actual = repo.addPerson(personDTO);
+        PersonDTO actual = null;
+        try {
+            actual = repo.addPerson(personDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         assertEquals("Test", actual.getFirstName());
         assertEquals("Name", actual.getLastName());
@@ -103,7 +118,12 @@ public class PersonFacadeTest {
         PersonDTO toBe = new PersonDTO("Edit", "Ted", "1234");
         toBe.setId(person1.getPersonId());
 
-        PersonDTO actual = repo.editPerson(toBe);
+        PersonDTO actual = null;
+        try {
+            actual = repo.editPerson(toBe);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         assertEquals("Edit", actual.getFirstName());
         assertEquals("Ted", actual.getLastName());
@@ -114,7 +134,12 @@ public class PersonFacadeTest {
 
     @Test
     public void testDeletePerson() {
-        PersonDTO deletedPerson = repo.deletePerson(person1.getPersonId());
+        PersonDTO deletedPerson = null;
+        try {
+            deletedPerson = repo.deletePerson(person1.getPersonId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assertNotNull(deletedPerson);
     }
 }
