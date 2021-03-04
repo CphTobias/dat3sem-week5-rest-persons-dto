@@ -9,7 +9,9 @@
 
 ## API Documentation
 
-### [Project link](https://tobias-z.com/insession-ca1/)
+### [Project link](https://tobias-z.com/rest-persons-dto/)
+
+Base URL for all endpoints https://tobias-z.com/rest-persons-dto/api
 
 #### Person
 
