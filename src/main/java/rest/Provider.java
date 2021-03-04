@@ -11,12 +11,12 @@ import utils.EMF_Creator;
 
 public class Provider {
 
-    public static Repository repo;
-    public static Gson gson;
+    public static Repository REPO;
+    public static Gson GSON;
 
     static {
-        repo = createRepository();
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        REPO = createRepository();
+        GSON = new GsonBuilder().setPrettyPrinting().create();
     }
 
     private static Repository createRepository() {

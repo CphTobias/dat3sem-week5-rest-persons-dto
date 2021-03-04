@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class PersonDTO {
 
+    private Integer id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -17,22 +18,27 @@ public class PersonDTO {
             .collect(Collectors.toList());
     }
 
+    public PersonDTO() {
+    }
+
+    public PersonDTO(Person person) {
+        this.id = person.getPersonId();
+        this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
+        this.phoneNumber = person.getPhoneNumber();
+    }
+
     public PersonDTO(String firstName, String lastName, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
     }
 
-    public PersonDTO(Person person) {
-        this.firstName = person.getFirstName();
-        this.lastName = person.getLastName();
-        this.phoneNumber = person.getPhoneNumber();
-    }
-
     @Override
     public String toString() {
         return "PersonDTO{" +
-            "firstName='" + firstName + '\'' +
+            "id=" + id +
+            ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", phoneNumber='" + phoneNumber + '\'' +
             '}';
@@ -47,14 +53,23 @@ public class PersonDTO {
             return false;
         }
         PersonDTO personDTO = (PersonDTO) o;
-        return Objects.equals(getFirstName(), personDTO.getFirstName()) && Objects
+        return Objects.equals(id, personDTO.id) && Objects
+            .equals(getFirstName(), personDTO.getFirstName()) && Objects
             .equals(getLastName(), personDTO.getLastName()) && Objects
             .equals(getPhoneNumber(), personDTO.getPhoneNumber());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFirstName(), getLastName(), getPhoneNumber());
+        return Objects.hash(id, getFirstName(), getLastName(), getPhoneNumber());
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {

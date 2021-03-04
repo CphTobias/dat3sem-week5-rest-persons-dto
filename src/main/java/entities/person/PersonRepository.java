@@ -5,9 +5,9 @@ import dtos.person.PersonsDTO;
 
 public interface PersonRepository {
 
-    public PersonDTO addPerson(String fName, String lName, String phone);
-    public PersonDTO deletePerson(long id);
-    public PersonDTO getPersonById(long id);
+    public PersonDTO addPerson(PersonDTO person);
+    public PersonDTO deletePerson(int id);
+    public PersonDTO getPersonById(int id);
     public PersonsDTO getAllPersons();
     public PersonDTO editPerson(PersonDTO p);
 

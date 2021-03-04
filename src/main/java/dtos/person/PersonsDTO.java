@@ -7,19 +7,17 @@ import java.util.stream.Collectors;
 
 public class PersonsDTO {
 
-    private List<InnerPersonDTO> all;
+    private List<PersonDTO> all;
 
     public PersonsDTO(List<Person> people) {
-        this.all = people.stream()
-            .map(person -> new InnerPersonDTO(person))
-            .collect(Collectors.toList());
+        this.all = PersonDTO.getFromPersonList(people);
     }
 
-    public List<InnerPersonDTO> getAll() {
+    public List<PersonDTO> getAll() {
         return all;
     }
 
-    public void setAll(List<InnerPersonDTO> all) {
+    public void setAll(List<PersonDTO> all) {
         this.all = all;
     }
 
@@ -45,83 +43,6 @@ public class PersonsDTO {
     @Override
     public int hashCode() {
         return Objects.hash(getAll());
-    }
-
-    private static class InnerPersonDTO {
-
-        private Long id;
-        private String firstName;
-        private String lastName;
-        private String phoneNumber;
-
-        public InnerPersonDTO(Person person) {
-            this.id = person.getPersonId();
-            this.firstName = person.getFirstName();
-            this.lastName = person.getLastName();
-            this.phoneNumber = person.getPhoneNumber();
-        }
-
-        @Override
-        public String toString() {
-            return "InnerPersonDTO{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof InnerPersonDTO)) {
-                return false;
-            }
-            InnerPersonDTO that = (InnerPersonDTO) o;
-            return Objects.equals(getId(), that.getId()) && Objects
-                .equals(getFirstName(), that.getFirstName()) && Objects
-                .equals(getLastName(), that.getLastName()) && Objects
-                .equals(getPhoneNumber(), that.getPhoneNumber());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(getId(), getFirstName(), getLastName(), getPhoneNumber());
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
     }
 }
 

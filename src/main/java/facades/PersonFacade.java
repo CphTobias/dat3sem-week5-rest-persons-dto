@@ -25,19 +25,40 @@ public class PersonFacade implements PersonRepository {
     }
 
     @Override
-    public PersonDTO addPerson(String fName, String lName, String phone) {
-        //TODO (tz): implement this!
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public PersonDTO addPerson(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
+        Person person = new Person(personDTO.getFirstName(), personDTO.getLastName(),
+            personDTO.getPhoneNumber());
+        try {
+            em.getTransaction().begin();
+            em.persist(person);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
+        return new PersonDTO(person);
     }
 
     @Override
-    public PersonDTO deletePerson(long id) {
-        //TODO (tz): implement this!
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public PersonDTO deletePerson(int id) {
+        EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class, id);
+        PersonDTO personDTO = new PersonDTO(person);
+
+        try {
+            em.getTransaction().begin();
+            em.remove(person);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
+        return personDTO;
     }
 
     @Override
-    public PersonDTO getPersonById(long id) {
+    public PersonDTO getPersonById(int id) {
         EntityManager em = emf.createEntityManager();
         try {
             Person person = em.find(Person.class, id);
@@ -61,7 +82,19 @@ public class PersonFacade implements PersonRepository {
 
     @Override
     public PersonDTO editPerson(PersonDTO p) {
-        //TODO (tz): implement this!
-        throw new UnsupportedOperationException("Not yet implemented!");
+        EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class, p.getId());
+
+        try {
+            em.getTransaction().begin();
+            person.setFirstName(p.getFirstName());
+            person.setLastName(p.getLastName());
+            person.setPhoneNumber(p.getPhoneNumber());
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
+        return new PersonDTO(person);
     }
 }

@@ -1,6 +1,10 @@
 package facades;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dtos.person.PersonDTO;
 import dtos.person.PersonsDTO;
@@ -82,4 +86,35 @@ public class PersonFacadeTest {
         assertEquals(expected.getAll().toArray().length, actual.getAll().toArray().length);
     }
 
+    @Test
+    public void testAddPerson() {
+        PersonDTO personDTO = new PersonDTO("Test", "Name", "4321");
+        PersonDTO actual = repo.addPerson(personDTO);
+
+        assertEquals("Test", actual.getFirstName());
+        assertEquals("Name", actual.getLastName());
+        assertEquals("4321", actual.getPhoneNumber());
+        assertNotNull(actual.getId());
+    }
+
+    @Test
+    public void testEditPerson() {
+        Person oldPerson = person1;
+        PersonDTO toBe = new PersonDTO("Edit", "Ted", "1234");
+        toBe.setId(person1.getPersonId());
+
+        PersonDTO actual = repo.editPerson(toBe);
+
+        assertEquals("Edit", actual.getFirstName());
+        assertEquals("Ted", actual.getLastName());
+        assertEquals("1234", actual.getPhoneNumber());
+
+        assertNotEquals(actual, new PersonDTO(oldPerson));
+    }
+
+    @Test
+    public void testDeletePerson() {
+        PersonDTO deletedPerson = repo.deletePerson(person1.getPersonId());
+        assertNotNull(deletedPerson);
+    }
 }
