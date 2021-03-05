@@ -1,9 +1,12 @@
 package dtos.person;
 
+import dtos.AddressDTO;
+import entities.address.Address;
 import entities.person.Person;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 public class PersonDTO {
 
@@ -11,6 +14,7 @@ public class PersonDTO {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private AddressDTO address;
 
     public static List<PersonDTO> getFromPersonList(List<Person> people) {
         return people.stream()
@@ -26,12 +30,14 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.phoneNumber = person.getPhoneNumber();
+        this.address = new AddressDTO(person.getAddress());
     }
 
-    public PersonDTO(String firstName, String lastName, String phoneNumber) {
+    public PersonDTO(String firstName, String lastName, String phoneNumber, AddressDTO addressDTO) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.address = addressDTO;
     }
 
     @Override
@@ -94,5 +100,13 @@ public class PersonDTO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public AddressDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 }
