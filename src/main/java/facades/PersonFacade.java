@@ -30,6 +30,11 @@ public class PersonFacade implements PersonRepository {
         EntityManager em = emf.createEntityManager();
         Person person = new Person(personDTO.getFirstName(), personDTO.getLastName(),
             personDTO.getPhoneNumber());
+
+        if (person.getFirstName() == null || person.getLastName() == null) {
+            throw new WebApplicationException("Unable to create person: Missing firstName or lastName", 400);
+        }
+
         try {
             em.getTransaction().begin();
             em.persist(person);
@@ -38,9 +43,6 @@ public class PersonFacade implements PersonRepository {
             em.close();
         }
 
-        if (person.getPersonId() == null) {
-            throw new WebApplicationException("Unable to create person, try again!", 409);
-        }
 
         return new PersonDTO(person);
     }
@@ -71,7 +73,7 @@ public class PersonFacade implements PersonRepository {
         try {
             Person person = em.find(Person.class, id);
             if (person == null) {
-                throw new WebApplicationException("Person with id: " + id + " was not found", 404);
+                throw new WebApplicationException("Person with id: " + id + " was not found");
             }
             return new PersonDTO(person);
         } finally {
@@ -85,7 +87,6 @@ public class PersonFacade implements PersonRepository {
         try {
             List<Person> people = em.createQuery("SELECT p FROM Person p", Person.class)
                 .getResultList();
-
             if (people == null) {
                 throw new WebApplicationException("No people were found", 404);
             }
@@ -98,6 +99,11 @@ public class PersonFacade implements PersonRepository {
     @Override
     public PersonDTO editPerson(PersonDTO p) throws WebApplicationException {
         EntityManager em = emf.createEntityManager();
+
+        if (p.getFirstName() == null || p.getLastName() == null) {
+            throw new WebApplicationException("Unable to create person: Missing firstName or lastName", 400);
+        }
+
         Person person = em.find(Person.class, p.getId());
         if (person == null) {
             throw new WebApplicationException("Person with id: " + p.getId() + " was not found", 404);
