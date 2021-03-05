@@ -3,13 +3,15 @@ package entities.address;
 import dtos.AddressDTO;
 import entities.person.Person;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -44,8 +46,8 @@ public class Address implements Serializable {
     )
     private String city;
 
-    @OneToOne(mappedBy = "address")
-    private Person person;
+    @OneToMany(mappedBy = "address")
+    private List<Person> people;
 
     public Address() {
     }
@@ -54,18 +56,39 @@ public class Address implements Serializable {
         this.street = street;
         this.zip = zip;
         this.city = city;
+        this.people = new ArrayList<>();
     }
 
     public Address(AddressDTO addressDTO) {
         this.street = addressDTO.getStreet();
         this.zip = addressDTO.getZip();
         this.city = addressDTO.getCity();
+        this.people = new ArrayList<>();
+    }
+
+    public boolean isNewAddress(AddressDTO address) {
+        if (!this.city.equals(address.getCity())) {
+            return true;
+        } else if (!this.street.equals(address.getStreet())) {
+            return true;
+        } else if (!this.zip.equals(address.getZip())) {
+            return true;
+        }
+        return false;
     }
 
     public void updateAddress(AddressDTO address) {
-        this.setStreet(address.getStreet());
-        this.setZip(address.getZip());
-        this.setCity(address.getCity());
+        if (this.people.size() < 2) {
+            this.setStreet(address.getStreet());
+            this.setZip(address.getZip());
+            this.setCity(address.getCity());
+        }
+    }
+
+    public void addPerson(Person person) {
+        if (person != null) {
+            this.people.add(person);
+        }
     }
 
     @Override
@@ -90,20 +113,18 @@ public class Address implements Serializable {
     @Override
     public String toString() {
         return "Address{" +
-            "id=" + addressId +
+            "addressId=" + addressId +
             ", street='" + street + '\'' +
             ", zip='" + zip + '\'' +
             ", city='" + city + '\'' +
+            ", people=" + people +
             '}';
     }
 
-    public Person getPerson() {
-        return person;
+    public List<Person> getPeople() {
+        return people;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
 
     public void setAddressId(Integer id) {
         this.addressId = id;

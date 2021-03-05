@@ -1,6 +1,5 @@
 package entities.person;
 
-import dtos.AddressDTO;
 import dtos.person.PersonDTO;
 import entities.address.Address;
 import java.io.Serializable;
@@ -12,8 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -55,8 +54,7 @@ public class Person implements Serializable {
     @Column(name = "lastEdited")
     private Date lastEdited;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "addressId")
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Address address;
 
     public Person() {
@@ -70,19 +68,28 @@ public class Person implements Serializable {
         this.lastEdited = new Date();
     }
 
-    public void setAddress(Address address) {
-        if (address != null) {
-            this.address = address;
-            address.setPerson(this);
-        }
-    }
-
     public void updatePerson(PersonDTO person) {
-        this.getAddress().updateAddress(person.getAddress());
+        if (
+            //Is it a new address and does it contain more than one person in it
+            this.getAddress().isNewAddress(person.getAddress()) && this.getAddress().getPeople().size() > 1
+        ) {
+            this.setAddress(new Address(person.getAddress()));
+        } else {
+            //if it is a new address but only contains that one person, then we update it instead of creating a new one
+            this.getAddress().updateAddress(person.getAddress());
+        }
         this.setFirstName(person.getFirstName());
         this.setLastName(person.getLastName());
         this.setPhoneNumber(person.getPhoneNumber());
     }
+
+    public void setAddress(Address address) {
+        if (address != null) {
+            this.address = address;
+            address.addPerson(this);
+        }
+    }
+
 
     public void setPersonId(Integer id) {
         this.personId = id;
