@@ -8,7 +8,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.AddressDTO;
 import dtos.person.PersonDTO;
+import entities.address.Address;
 import entities.person.Person;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -30,7 +32,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 
-@Disabled
 public class PersonResourceTest {
 
     private static final int SERVER_PORT = 7777;
@@ -62,8 +63,6 @@ public class PersonResourceTest {
 
     @AfterAll
     public static void closeTestServer() {
-        //System.in.read();
-
         //Don't forget this, if you called its counterpart in @BeforeAll
         EMF_Creator.endREST_TestWithDB();
         httpServer.shutdownNow();
@@ -73,8 +72,13 @@ public class PersonResourceTest {
     public void setUp() {
         EntityManager em = emf.createEntityManager();
         person1 = new Person("First1", "First2", "1111");
+        person1.setAddress(new Address("Street1", "Zip1", "City1"));
+
         person2 = new Person("Second1", "Second2", "2222");
+        person2.setAddress(new Address("Street2", "Zip2", "City2"));
+
         person3 = new Person("Third1", "Third2", "3333");
+        person3.setAddress(new Address("Street3", "Zip3", "City3"));
         try {
             em.getTransaction().begin();
             em.persist(person1);
@@ -111,7 +115,8 @@ public class PersonResourceTest {
             .get("/person/{id}").then()
             .assertThat()
             .statusCode(HttpStatus.OK_200.getStatusCode())
-            .body("id", equalTo(person1.getPersonId()));
+            .body("id", equalTo(person1.getPersonId()))
+            .body("address.id", equalTo(person1.getAddress().getAddressId()));
 
     }
 
@@ -135,7 +140,8 @@ public class PersonResourceTest {
 
     @Test
     public void testAddPerson() {
-        String requestBody = gson.toJson(new PersonDTO("Add", "Me", "1234"));
+        AddressDTO addressDTO = new AddressDTO(new Address("street", "zip", "city"));
+        String requestBody = gson.toJson(new PersonDTO("Add", "Me", "1234", addressDTO));
 
         given()
             .header("Content-type", ContentType.JSON)
@@ -147,13 +153,15 @@ public class PersonResourceTest {
             .assertThat()
             .statusCode(201)
             .body("id", notNullValue())
-            .body("firstName", equalTo("Add"));
+            .body("firstName", equalTo("Add"))
+            .body("address.street", equalTo("street"));
     }
 
     @Test
     public void testEditPerson() {
         //Editing person 1
-        String requestBody = gson.toJson(new PersonDTO("Edit", "Me", "1234"));
+        AddressDTO addressDTO = new AddressDTO(new Address("Edit", "Me", "city"));
+        String requestBody = gson.toJson(new PersonDTO("Edit", "Me", "1234", addressDTO));
 
         given()
             .header("Content-type", ContentType.JSON)
@@ -166,7 +174,8 @@ public class PersonResourceTest {
             .assertThat()
             .statusCode(200)
             .body("id", equalTo(person1.getPersonId()))
-            .body("firstName", equalTo("Edit"));
+            .body("firstName", equalTo("Edit"))
+            .body("address.street", equalTo("Edit"));
     }
 
     @Test

@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dtos.AddressDTO;
 import dtos.person.PersonDTO;
 import dtos.person.PersonsDTO;
+import entities.address.Address;
 import entities.person.Person;
 import entities.person.PersonRepository;
 import java.util.ArrayList;
@@ -21,7 +23,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 
-@Disabled
 public class PersonFacadeTest {
 
     private static EntityManagerFactory emf;
@@ -44,8 +45,13 @@ public class PersonFacadeTest {
     public void setUp() {
         EntityManager em = emf.createEntityManager();
         person1 = new Person("First1", "First2", "1111");
+        person1.setAddress(new Address("Street1", "Zip1", "City1"));
+
         person2 = new Person("Second1", "Second2", "2222");
+        person2.setAddress(new Address("Street2", "Zip2", "City1"));
+
         person3 = new Person("Third1", "Third2", "3333");
+        person3.setAddress(new Address("Street3", "Zip3", "City3"));
         try {
             em.getTransaction().begin();
             em.persist(person1);
@@ -83,12 +89,7 @@ public class PersonFacadeTest {
 
     @Test
     public void testGetAllPersons() {
-        PersonsDTO actual = null;
-        try {
-            actual = repo.getAllPersons();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        PersonsDTO actual = repo.getAllPersons();
         List<Person> people = new ArrayList<>();
         people.add(person1);
         people.add(person2);
@@ -100,7 +101,8 @@ public class PersonFacadeTest {
 
     @Test
     public void testAddPerson() {
-        PersonDTO personDTO = new PersonDTO("Test", "Name", "4321");
+        AddressDTO addressDTO = new AddressDTO(new Address("Add", "Me", "city"));
+        PersonDTO personDTO = new PersonDTO("Test", "Name", "4321", addressDTO);
         PersonDTO actual = null;
         try {
             actual = repo.addPerson(personDTO);
@@ -117,7 +119,9 @@ public class PersonFacadeTest {
     @Test
     public void testEditPerson() {
         Person oldPerson = person1;
-        PersonDTO toBe = new PersonDTO("Edit", "Ted", "1234");
+
+        AddressDTO addressDTO = new AddressDTO(new Address("Edit", "Me", "city"));
+        PersonDTO toBe = new PersonDTO("Edit", "Ted", "1234", addressDTO);
         toBe.setId(person1.getPersonId());
 
         PersonDTO actual = null;

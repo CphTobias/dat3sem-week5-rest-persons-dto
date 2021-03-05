@@ -37,7 +37,12 @@ ___
 {
       "firstName": string,
       "lastName": string,
-      "phoneNumber": string
+      "phoneNumber": string,
+      "address": {
+          "street": string,
+          "zip": string,
+          "city": string
+      } 
 }
 ```
 
@@ -75,7 +80,12 @@ A single person:
       "id": int,
       "firstName": string,
       "lastName": string,
-      "phoneNumber": string
+      "phoneNumber": string,
+      "address": {
+          "street": string,
+          "zip": string,
+          "city": string
+      }
 }
 ```
 
@@ -87,7 +97,12 @@ Multiple people:
           "id": int,
           "firstName": string,
           "lastName": string,
-          "phoneNumber": string 
+          "phoneNumber": string,
+          "address": {
+              "street": string,
+              "zip": string,
+              "city": string
+          }
         }, 
     ]
 }

@@ -1,13 +1,17 @@
 package entities.person;
 
+import entities.address.Address;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -49,6 +53,10 @@ public class Person implements Serializable {
     @Column(name = "lastEdited")
     private Date lastEdited;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "addressId")
+    private Address address;
+
     public Person() {
     }
 
@@ -60,16 +68,11 @@ public class Person implements Serializable {
         this.lastEdited = new Date();
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-            "personId=" + personId +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", phoneNumber='" + phoneNumber + '\'' +
-            ", createdAt=" + createdAt +
-            ", lastEdited=" + lastEdited +
-            '}';
+    public void setAddress(Address address) {
+        if (address != null) {
+            this.address = address;
+            address.setPerson(this);
+        }
     }
 
     public void setPersonId(Integer id) {
@@ -118,5 +121,22 @@ public class Person implements Serializable {
 
     public void setLastEdited(Date lastEdited) {
         this.lastEdited = lastEdited;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+            "personId=" + personId +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", phoneNumber='" + phoneNumber + '\'' +
+            ", createdAt=" + createdAt +
+            ", lastEdited=" + lastEdited +
+            ", address=" + address +
+            '}';
     }
 }

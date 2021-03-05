@@ -33,6 +33,7 @@ public class PersonResource extends Provider {
 
     @POST
     public Response addPerson(PersonDTO personDTO) {
+        System.out.println(personDTO);
         PersonDTO createdPerson = REPO.getPersonRepo().addPerson(personDTO);
         return Response.status(201).entity(GSON.toJson(createdPerson)).build();
     }

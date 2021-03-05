@@ -2,6 +2,7 @@ package facades;
 
 import dtos.person.PersonDTO;
 import dtos.person.PersonsDTO;
+import entities.address.Address;
 import entities.person.Person;
 import entities.person.PersonRepository;
 import java.util.List;
@@ -30,10 +31,13 @@ public class PersonFacade implements PersonRepository {
         EntityManager em = emf.createEntityManager();
         Person person = new Person(personDTO.getFirstName(), personDTO.getLastName(),
             personDTO.getPhoneNumber());
+        person.setAddress(new Address(personDTO.getAddress()));
+        System.out.println(person);
 
         if (person.getFirstName() == null || person.getLastName() == null) {
             throw new WebApplicationException("Unable to create person: Missing firstName or lastName", 400);
         }
+
 
         try {
             em.getTransaction().begin();
@@ -59,6 +63,7 @@ public class PersonFacade implements PersonRepository {
         try {
             em.getTransaction().begin();
             em.remove(person);
+            em.remove(person.getAddress());
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -114,6 +119,7 @@ public class PersonFacade implements PersonRepository {
             person.setFirstName(p.getFirstName());
             person.setLastName(p.getLastName());
             person.setPhoneNumber(p.getPhoneNumber());
+            person.getAddress().updateAddress(p.getAddress());
             em.getTransaction().commit();
         } finally {
             em.close();
