@@ -1,5 +1,7 @@
 package entities.person;
 
+import dtos.AddressDTO;
+import dtos.person.PersonDTO;
 import entities.address.Address;
 import java.io.Serializable;
 import java.util.Date;
@@ -73,6 +75,13 @@ public class Person implements Serializable {
             this.address = address;
             address.setPerson(this);
         }
+    }
+
+    public void updatePerson(PersonDTO person) {
+        this.getAddress().updateAddress(person.getAddress());
+        this.setFirstName(person.getFirstName());
+        this.setLastName(person.getLastName());
+        this.setPhoneNumber(person.getPhoneNumber());
     }
 
     public void setPersonId(Integer id) {

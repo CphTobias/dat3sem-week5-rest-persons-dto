@@ -106,7 +106,7 @@ public class PersonFacade implements PersonRepository {
         EntityManager em = emf.createEntityManager();
 
         if (p.getFirstName() == null || p.getLastName() == null) {
-            throw new WebApplicationException("Unable to create person: Missing firstName or lastName", 400);
+            throw new WebApplicationException("Unable to update person: Missing firstName or lastName", 400);
         }
 
         Person person = em.find(Person.class, p.getId());
@@ -116,10 +116,7 @@ public class PersonFacade implements PersonRepository {
 
         try {
             em.getTransaction().begin();
-            person.setFirstName(p.getFirstName());
-            person.setLastName(p.getLastName());
-            person.setPhoneNumber(p.getPhoneNumber());
-            person.getAddress().updateAddress(p.getAddress());
+            person.updatePerson(p);
             em.getTransaction().commit();
         } finally {
             em.close();
