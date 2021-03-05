@@ -8,6 +8,7 @@ import entities.person.PersonRepository;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.ws.rs.WebApplicationException;
 
 public class PersonFacade implements PersonRepository {
@@ -31,13 +32,23 @@ public class PersonFacade implements PersonRepository {
         EntityManager em = emf.createEntityManager();
         Person person = new Person(personDTO.getFirstName(), personDTO.getLastName(),
             personDTO.getPhoneNumber());
-        person.setAddress(new Address(personDTO.getAddress()));
-        System.out.println(person);
 
         if (person.getFirstName() == null || person.getLastName() == null) {
             throw new WebApplicationException("Unable to create person: Missing firstName or lastName", 400);
         }
 
+        try {
+            Address address = em.createQuery(
+                "SELECT a FROM Address a WHERE a.city = :city AND a.street = :street AND a.zip = :zip",
+                Address.class
+            ).setParameter("city", personDTO.getAddress().getCity())
+                .setParameter("street", personDTO.getAddress().getStreet())
+                .setParameter("zip", personDTO.getAddress().getZip())
+                .getSingleResult();
+            person.setAddress(address);
+        } catch (NoResultException e) {
+            person.setAddress(new Address(personDTO.getAddress()));
+        }
 
         try {
             em.getTransaction().begin();
@@ -46,8 +57,6 @@ public class PersonFacade implements PersonRepository {
         } finally {
             em.close();
         }
-
-
         return new PersonDTO(person);
     }
 
@@ -62,8 +71,8 @@ public class PersonFacade implements PersonRepository {
 
         try {
             em.getTransaction().begin();
+            person.getAddress().getPeople().remove(person);
             em.remove(person);
-            em.remove(person.getAddress());
             em.getTransaction().commit();
         } finally {
             em.close();
