@@ -1,6 +1,6 @@
 package rest;
 
-import errorhandling.GenericExceptionMapper;
+import utils.errorhandling.GenericExceptionMapper;
 import java.util.Set;
 import javax.ws.rs.core.Application;
 import org.glassfish.jersey.server.wadl.internal.WadlResource;

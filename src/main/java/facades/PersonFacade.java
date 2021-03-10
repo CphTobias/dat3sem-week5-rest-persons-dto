@@ -87,7 +87,7 @@ public class PersonFacade implements PersonRepository {
         try {
             Person person = em.find(Person.class, id);
             if (person == null) {
-                throw new WebApplicationException("Person with id: " + id + " was not found");
+                throw new WebApplicationException("Person with id: " + id + " was not found", 404);
             }
             return new PersonDTO(person);
         } finally {
