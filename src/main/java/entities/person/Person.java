@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "person")
@@ -48,9 +50,11 @@ public class Person implements Serializable {
     )
     private String phoneNumber;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "createdAt")
     private Date createdAt;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "lastEdited")
     private Date lastEdited;
 
