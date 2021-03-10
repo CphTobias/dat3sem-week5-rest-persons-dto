@@ -4,6 +4,7 @@ import errorhandling.GenericExceptionMapper;
 import java.util.Set;
 import javax.ws.rs.core.Application;
 import org.glassfish.jersey.server.wadl.internal.WadlResource;
+import utils.CorsFilter;
 
 @javax.ws.rs.ApplicationPath("api")
 public class ApplicationConfig extends Application {
@@ -16,6 +17,7 @@ public class ApplicationConfig extends Application {
     }
 
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(CorsFilter.class);
         resources.add(GenericExceptionMapper.class);
         resources.add(WadlResource.class);
         resources.add(RenameMeResource.class);
