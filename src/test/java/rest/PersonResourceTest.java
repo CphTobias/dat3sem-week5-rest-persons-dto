@@ -35,7 +35,7 @@ import utils.EMF_Creator;
 public class PersonResourceTest {
 
     private static final int SERVER_PORT = 7777;
-    private static final String SERVER_URL = "http://localhost/api";
+    private static final String SERVER_URL = "http://localhost/";
     private static Person person1, person2, person3;
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
