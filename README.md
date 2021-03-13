@@ -9,9 +9,9 @@
 
 ## API Documentation
 
-### [Project link](https://tobias-z.com/api/rest-persons-dto/)
+### [Project link](https://tobias-z.com/)
 
-Base URL for all endpoints https://tobias-z.com/api/rest-persons-dto
+Base URL for all endpoints https://api.tobias-z.com/rest-persons-dto
 
 #### Person
 

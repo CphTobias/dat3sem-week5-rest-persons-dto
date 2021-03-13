@@ -24,6 +24,7 @@ public class ApplicationConfig extends Application {
         resources.add(WadlResource.class);
         resources.add(RenameMeResource.class);
         resources.add(PersonResource.class);
+        resources.add(CountryResource.class);
     }
     
 }
